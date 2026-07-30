@@ -41,6 +41,9 @@ body{background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:
 
 /* ── каркас ── */
 .wrap{display:grid; grid-template-columns:var(--rail) minmax(0,1fr); align-items:start}
+/* Без этого колонка сетки не может стать уже своего содержимого */
+main{min-width:0}
+.sheet{min-width:0; max-width:100%}
 .rail{position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto;
   border-right:1px solid var(--rule); background:var(--paper); padding:12px 0 40px}
 .rail h4{margin:16px 18px 7px; font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--faint)}
@@ -86,7 +89,10 @@ h3.sh{font-family:var(--serif); font-size:18.5px; font-weight:600; line-height:1
 .sh-alt{font-size:12.5px; color:var(--faint); font-style:italic; margin:0 0 12px}
 
 /* ── текст правил ── */
-.prose{font-family:var(--serif); font-size:16.5px; line-height:1.6; max-width:70ch}
+/* Длинные ссылки без пробелов рвём принудительно, иначе они распирают колонку */
+.prose{font-family:var(--serif); font-size:16.5px; line-height:1.6; max-width:70ch;
+  overflow-wrap:anywhere; word-break:break-word}
+.snip, .nav-item .lbl, #tip .td, .toc a{overflow-wrap:anywhere}
 .prose>p{margin:0 0 11px}
 .prose p.def{margin:0 0 9px; padding-left:17px; text-indent:-17px}
 .prose p.def>strong:first-child{color:var(--accent-deep)}
@@ -152,17 +158,22 @@ body.embed .sheet{max-width:none}
 .navbtn[aria-expanded="true"]{background:var(--accent); border-color:var(--accent-deep); color:#fff}
 
 @media (max-width:760px){
-  .wrap{grid-template-columns:1fr}
-  .navbtn{display:inline-flex; order:2}
-  .top{gap:10px; padding:9px 12px}
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .navbtn{display:inline-flex; order:2; padding:7px 11px}
+  .top{gap:8px; padding:7px 12px}
   .brand{order:1; margin-right:auto}
-  .brand b{font-size:16px}
+  .brand b{font-size:15px; line-height:1.2}
   .brand span{display:none}
   .langsw{order:3}
+  .langsw button{padding:6px 10px; font-size:12px}
   .search{order:4; flex:1 1 100%; min-width:0}
-  /* Панель разделов не выталкивает текст, а накрывает экран поверх него */
-  .rail{display:none; position:fixed; left:0; right:0; top:0; bottom:0; z-index:40;
-    height:auto; max-height:none; overflow-y:auto; border-right:none; padding:10px 0 40px}
+  .search input{padding:6px 28px 6px 10px; font-size:13px}
+  .search kbd{display:none}
+  /* Панель разделов накрывает текст, но НЕ шапку: иначе до кнопки «Закрыть» не добраться.
+     Отступ сверху равен высоте шапки и выставляется скриптом — она переносится по строкам. */
+  .rail{display:none; position:fixed; left:0; right:0; top:0; bottom:0; z-index:25;
+    height:auto; max-height:none; overflow-y:auto; border-right:none; padding:6px 0 40px;
+    box-shadow:0 -1px 0 var(--rule) inset}
   .rail.open{display:block}
   body.nav-open{overflow:hidden}
   /* Во встроенном режиме фиксировать нечего: страницу прокручивает хозяин */
@@ -829,7 +840,12 @@ document.addEventListener("mouseover", e => {
   dropTip();
 });
 document.addEventListener("focusin", e => { const el = e.target.closest(".term"); if(el){ holdTip(); showTip(el); } });
-document.addEventListener("keydown", e => { if(e.key === "Escape") hideTip(); });
+document.addEventListener("keydown", e => {
+  if(e.key !== "Escape") return;
+  hideTip();
+  const r = document.getElementById("rail");
+  if(r && r.classList.contains("open")) setNav(false);
+});
 
 /* ═══════════ поиск ═══════════ */
 function search(q){
@@ -1007,10 +1023,20 @@ function setNav(open){
   document.body.classList.toggle("nav-open", open && !EMBED);
   navBtn.setAttribute("aria-expanded", open ? "true" : "false");
   navBtn.textContent = open ? t().navClose : t().navOpen;
-  if(open) railEl.scrollTop = 0;
+  if(open){
+    /* Шапка переносится по строкам, поэтому её высоту берём каждый раз заново. */
+    const h = document.querySelector(".top").offsetHeight;
+    railEl.style.top = h + "px";
+    railEl.scrollTop = 0;
+  } else {
+    railEl.style.top = "";
+  }
 }
 navBtn.onclick = () => setNav(!railEl.classList.contains("open"));
-window.addEventListener("resize", () => { if(window.innerWidth > 760) setNav(false); });
+window.addEventListener("resize", () => {
+  if(window.innerWidth > 760) setNav(false);
+  else if(railEl.classList.contains("open")) railEl.style.top = document.querySelector(".top").offsetHeight + "px";
+});
 
 const qEl = document.getElementById("q");
 qEl.oninput = () => { query = qEl.value; drawRail(); };
