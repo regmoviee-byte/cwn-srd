@@ -145,10 +145,40 @@ body.embed .rail{position:static; height:auto; overflow:visible; padding-bottom:
 body.embed main{padding:26px 30px 40px}
 body.embed .sheet{max-width:none}
 @media (max-width:1040px){:root{--rail:252px} main{padding:24px 20px 90px} .sheet-in{padding:26px 24px 34px}}
+/* Кнопка «Разделы» — только на узких экранах */
+.navbtn{display:none; align-items:center; gap:6px; font:inherit; font-size:13px; font-weight:600;
+  padding:8px 13px; border:1px solid var(--rule); border-radius:6px; background:var(--bg);
+  color:var(--ink-soft); cursor:pointer}
+.navbtn[aria-expanded="true"]{background:var(--accent); border-color:var(--accent-deep); color:#fff}
+
 @media (max-width:760px){
   .wrap{grid-template-columns:1fr}
-  .rail{position:static; height:auto; border-right:none; border-bottom:1px solid var(--rule)}
-  h1.t{font-size:26px} h2.sh{font-size:20px} #tip{max-width:calc(100vw - 32px)}
+  .navbtn{display:inline-flex; order:2}
+  .top{gap:10px; padding:9px 12px}
+  .brand{order:1; margin-right:auto}
+  .brand b{font-size:16px}
+  .brand span{display:none}
+  .langsw{order:3}
+  .search{order:4; flex:1 1 100%; min-width:0}
+  /* Панель разделов не выталкивает текст, а накрывает экран поверх него */
+  .rail{display:none; position:fixed; left:0; right:0; top:0; bottom:0; z-index:40;
+    height:auto; max-height:none; overflow-y:auto; border-right:none; padding:10px 0 40px}
+  .rail.open{display:block}
+  body.nav-open{overflow:hidden}
+  /* Во встроенном режиме фиксировать нечего: страницу прокручивает хозяин */
+  body.embed .rail{position:static; z-index:auto; padding-bottom:16px;
+    border-bottom:1px solid var(--rule)}
+  main{padding:16px 12px 70px}
+  .sheet{border-radius:0; border-left:0; border-right:0; margin:0 -12px}
+  .sheet-in{padding:20px 16px 30px}
+  h1.t{font-size:24px} h2.sh{font-size:19px} h3.sh{font-size:16.5px}
+  .prose{font-size:16px; max-width:none}
+  .toc ol{grid-template-columns:1fr}
+  .nav-item{padding:10px 16px}
+  #tip{max-width:calc(100vw - 24px)}
+  .pager{flex-direction:column; gap:8px}
+  .pager button{max-width:none; text-align:left}
+  .pager .r{text-align:left}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
 </style>
@@ -156,6 +186,7 @@ body.embed .sheet{max-width:none}
 <body>
 <header class="top">
   <div class="brand"><b id="bTitle"></b><span id="bSub"></span></div>
+  <button class="navbtn" id="navBtn" type="button" aria-expanded="false" aria-controls="rail"></button>
   <div class="search"><input id="q" type="search" autocomplete="off" aria-label="search"><kbd>/</kbd></div>
   <div class="langsw" role="group" aria-label="language">
     <button id="lRu" type="button" aria-pressed="true">Русский</button>
@@ -413,12 +444,14 @@ const byNum = new Map(SECS.map(s => [s.n, s]));
 const UI = {
   ru:{ title:"Города без числа", sub:"Справочный документ по системе 1.0",
     search:"Поиск по документу…", contents:"Разделы", inThis:"В этом разделе",
+    navOpen:"Разделы", navClose:"Закрыть",
     found:"Найдено", nothing:"Ничего не найдено. Поиск идёт и по русскому, и по английскому тексту.",
     orig:"В оригинале", prev:"Назад", next:"Дальше", goto:"Открыть раздел",
     noText:"В этом разделе нет своего текста — это заголовок главы.",
     foot:"Оригинал: Cities Without Number Systems Reference Document v1.0, Kevin Crawford, 8 сентября 2023. Автор передал документ в общественное достояние по лицензии CC0. Русский перевод распространяется свободно." },
   en:{ title:"Cities Without Number", sub:"Systems Reference Document 1.0",
     search:"Search the document…", contents:"Contents", inThis:"In this section",
+    navOpen:"Contents", navClose:"Close",
     found:"Found", nothing:"No matches. Search covers both the English and the Russian text.",
     orig:"In Russian", prev:"Back", next:"Next", goto:"Open section",
     noText:"This section has no body text of its own — it is a chapter heading.",
@@ -761,6 +794,8 @@ function linkTerms(root, homeNums){
 const tip = document.getElementById("tip");
 let tipFor = null;
 function showTip(el){
+  /* На узком экране наведения нет: по термину просто переходят касанием. */
+  if(window.innerWidth <= 760) return;
   const rec = TERMS.get(el.dataset.term); if(!rec) return;
   const s = byNum.get(rec.sec);
   const head = rec.full || rec.name;
@@ -901,6 +936,8 @@ function draw(scrollTo){
   document.getElementById("foot").textContent = t().foot;
   document.getElementById("lRu").setAttribute("aria-pressed", lang === "ru");
   document.getElementById("lEn").setAttribute("aria-pressed", lang === "en");
+  const navB = document.getElementById("navBtn");
+  if(navB) navB.textContent = document.getElementById("rail").classList.contains("open") ? t().navClose : t().navOpen;
   hideTip();
   drawPage();
   drawRail();
@@ -962,6 +999,19 @@ function setLang(l){
 document.getElementById("lRu").onclick = () => setLang("ru");
 document.getElementById("lEn").onclick = () => setLang("en");
 
+/* ── список разделов на узком экране ── */
+const navBtn = document.getElementById("navBtn");
+const railEl = document.getElementById("rail");
+function setNav(open){
+  railEl.classList.toggle("open", open);
+  document.body.classList.toggle("nav-open", open && !EMBED);
+  navBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  navBtn.textContent = open ? t().navClose : t().navOpen;
+  if(open) railEl.scrollTop = 0;
+}
+navBtn.onclick = () => setNav(!railEl.classList.contains("open"));
+window.addEventListener("resize", () => { if(window.innerWidth > 760) setNav(false); });
+
 const qEl = document.getElementById("q");
 qEl.oninput = () => { query = qEl.value; drawRail(); };
 qEl.onkeydown = e => { if(e.key === "Escape"){ qEl.value = ""; query = ""; qEl.blur(); drawRail(); } };
@@ -977,9 +1027,9 @@ document.addEventListener("click", e => {
     if(rec){ hideTip(); go(rec.sec); return; }
   }
   const b = e.target.closest("[data-sec]");
-  if(b){ go(b.dataset.sec); return; }
+  if(b){ setNav(false); go(b.dataset.sec); return; }
   const a = e.target.closest(".toc a");
-  if(a){ e.preventDefault(); go(a.getAttribute("href").replace("#s=", "")); return; }
+  if(a){ e.preventDefault(); setNav(false); go(a.getAttribute("href").replace("#s=", "")); return; }
 });
 
 function fromHash(){
