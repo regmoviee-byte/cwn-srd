@@ -136,6 +136,14 @@ h3.sh{font-family:var(--serif); font-size:18.5px; font-weight:600; line-height:1
 footer{max-width:1020px; margin:34px 0 0; padding-top:18px; border-top:1px solid var(--rule);
   font-size:12.5px; color:var(--faint); line-height:1.6}
 
+/* ── режим встраивания в чужую страницу ──
+   Рамка растёт под содержимое, своей прокрутки у неё нет, поэтому липкие
+   элементы отключаем: липнуть тут не к чему, прокручивается внешняя страница. */
+body.embed{background:transparent}
+body.embed .top{position:static}
+body.embed .rail{position:static; height:auto; overflow:visible; padding-bottom:22px}
+body.embed main{padding:26px 30px 40px}
+body.embed .sheet{max-width:none}
 @media (max-width:1040px){:root{--rail:252px} main{padding:24px 20px 90px} .sheet-in{padding:26px 24px 34px}}
 @media (max-width:760px){
   .wrap{grid-template-columns:1fr}
@@ -393,6 +401,11 @@ footer{max-width:1020px; margin:34px 0 0; padding-top:18px; border-top:1px solid
 ]}</script>
 <script>
 "use strict";
+/* Документ открыт внутри рамки на чужой странице? Тогда высотой и прокруткой
+   управляет внешняя страница, а не мы. */
+const EMBED = (window.parent !== window);
+if(EMBED) document.body.classList.add("embed");
+
 const DATA = JSON.parse(document.getElementById("srd-data").textContent);
 const SECS = DATA.sections;
 const byNum = new Map(SECS.map(s => [s.n, s]));
@@ -882,7 +895,6 @@ function drawPage(){
 }
 
 function draw(scrollTo){
-  document.documentElement.lang = lang;
   document.getElementById("bTitle").textContent = t().title;
   document.getElementById("bSub").textContent = t().sub;
   document.getElementById("q").placeholder = t().search;
@@ -902,13 +914,35 @@ function draw(scrollTo){
   pb.onclick = () => { if(pv) go(pv.n); };
   nb.onclick = () => { if(nx) go(nx.n); };
 
-  document.title = sTitle(byNum.get(cur)) + " · " + t().title;
-
-  if(scrollTo){
-    const el = document.getElementById("sub-" + scrollTo);
-    if(el){ el.scrollIntoView({ block:"start", behavior:"instant" }); return; }
+  /* Заголовок и язык документа во встроенном режиме не трогаем: это чужая страница. */
+  if(!EMBED){
+    document.documentElement.lang = lang;
+    document.title = sTitle(byNum.get(cur)) + " · " + t().title;
   }
+
+  const anchor = scrollTo ? document.getElementById("sub-" + scrollTo) : null;
+  if(EMBED){
+    /* Прокрутку делает внешняя страница — сообщаем ей, куда встать. */
+    const off = anchor ? Math.max(0, anchor.getBoundingClientRect().top + window.scrollY - 8) : 0;
+    postSize();
+    try{ window.parent.postMessage({ cwn:"scroll", offset:off }, "*"); }catch(e){}
+    return;
+  }
+  if(anchor){ anchor.scrollIntoView({ block:"start", behavior:"instant" }); return; }
   window.scrollTo({ top:0, behavior:"instant" });
+}
+
+/* Сообщаем внешней странице нужную высоту рамки, чтобы у неё не появлялась
+   вторая полоса прокрутки. */
+function postSize(){
+  if(!EMBED) return;
+  const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+  try{ window.parent.postMessage({ cwn:"height", height:h }, "*"); }catch(e){}
+}
+if(EMBED){
+  window.addEventListener("load", postSize);
+  if(window.ResizeObserver) new ResizeObserver(postSize).observe(document.body);
+  else window.addEventListener("resize", postSize);
 }
 
 function go(num){
