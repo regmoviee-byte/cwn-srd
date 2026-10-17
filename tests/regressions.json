@@ -1,0 +1,216 @@
+{
+  "repo": "cwn",
+  "rules_sha256": "6638a0337c12a29c99599fc50bf7b90b675659b8ec55a51a13f97d98e331d757",
+  "cases": [
+    {
+      "id": "C01",
+      "language": "ru",
+      "source": "2.8.2",
+      "text": "Индивидуальная подгонка",
+      "target": "3.4.5",
+      "record_name": "Индивидуальная подгонка",
+      "old_def": "Броня подогнана под конкретного носителя и даёт ему +1 к КЗщ и дальнего, и ближнего боя, пока надета.",
+      "positive": true
+    },
+    {
+      "id": "C02",
+      "language": "en",
+      "source": "2.8.2",
+      "text": "Customized",
+      "target": "3.4.5",
+      "record_name": "Customized",
+      "old_def": "The armor is tailored to a specific wearer, granting them a +1 bonus to both ranged and melee AC while it’s worn.",
+      "positive": true
+    },
+    {
+      "id": "C03",
+      "language": "ru",
+      "source": "3.9.2",
+      "text": "Грузовой отсек",
+      "target": "3.9.2",
+      "record_name": "Грузовой отсек",
+      "old_def": "Большинство дронов рассчитаны нести только собственный вес. Эта оснастка усиливает двигатели и добавляет на корпус грузовые крепления: теперь дрон несёт до 3 пунктов Загруженности, но его собственная Загруженность растёт на единицу. Любой перевозимый груз, разумеется, прибавляется к этой ноше. Груз запечатан внутри дрона, и чтобы его выковырять, нужно Основное действие.",
+      "positive": false
+    },
+    {
+      "id": "C04",
+      "language": "en",
+      "source": "3.9.2",
+      "text": "Cargo Space",
+      "target": "3.9.2",
+      "record_name": "Cargo Space",
+      "old_def": "Most drones are designed to carry only their own weight. This fitting upgrades engines and adds cargo mounts to the drone’s exterior; it can carry up to 3 points of Encumbrance now, but the drone’s own Encumbrance value is increased by one. Any additional cargo it carries is added to this burden, of course. Carried cargo is sealed within the drone and requires a Main Action to dig out.",
+      "positive": false
+    },
+    {
+      "id": "C05",
+      "language": "en",
+      "source": "4.3.4",
+      "text": "Ghost",
+      "target": "4.3.4",
+      "record_name": "Ghost",
+      "old_def": "You are uncannily elusive. Gain Sneak as a bonus skill and the Fighting Withdrawal combat action is an On Turn action for you. Once per scene, reroll a failed Sneak check related to sneaking or going unseen. Once per game day, as a Move action, move up to 10 meters without anyone around you seeing you move. If you use this movement to get behind cover, you might seem to vanish outright to onlookers.",
+      "positive": false
+    },
+    {
+      "id": "C06",
+      "language": "en",
+      "source": "4.3.3",
+      "text": "Program",
+      "target": "4.3.3",
+      "record_name": "Program",
+      "old_def": "Operating or hacking computing and communications hardware. Roll it to program or hack computers, control computer-operated hardware, operate communications tech, or decrypt things. Hacker PCs rely heavily on this skill.",
+      "positive": false
+    },
+    {
+      "id": "C07",
+      "language": "en",
+      "source": "6.1.3.5",
+      "text": "Stun",
+      "target": "6.1.3.5",
+      "record_name": "Stun",
+      "old_def": "Disrupt an avatar or Demon with sensory glitching, non-lethal current surges, and code corruption. Make an Int/Program skill check; beat an opposed Int/Program check for a human target, or a static 8+skill bonus target for a Demon. The target takes 1d10 non-lethal damage per Program level, to a minimum of 1d10.",
+      "positive": false
+    },
+    {
+      "id": "C08",
+      "language": "ru",
+      "source": "6.2.8",
+      "text": "Проклятие",
+      "target": "6.2.8",
+      "record_name": "Проклятие",
+      "old_def": "Выбери целью видимое существо. Оно получает штраф -1 ко всем броскам атаки и урону, включая Шок, на один раунд за уровень заклинателя. В конце каждого раунда оно может сделать Ментальный спасбросок, чтобы сбросить эффект. Штраф растёт до -2 на 5-м уровне и до -3 на 9-м. На одном существе может действовать только одно Проклятие.",
+      "positive": false
+    },
+    {
+      "id": "C09",
+      "language": "en",
+      "source": "6.2.8",
+      "text": "Curse",
+      "target": "6.2.8",
+      "record_name": "Curse",
+      "old_def": "Target a visible creature. They suffer a -1 penalty to all hit rolls and damage, including Shock, for one round per caster level. They can make a Mental save at the end of each round to throw off the effect. This penalty increases to -2 at level 5, and -3 at level 9. Only one Curse can be active on a creature at once.",
+      "positive": false
+    },
+    {
+      "id": "C10",
+      "language": "ru",
+      "source": "4.1.0",
+      "text": "Кибердека",
+      "target": "3.7.0",
+      "record_name": "Кибердек",
+      "old_def": "Любой умелый медик может вживлять и обслуживать кибер-системы, но у тебя к этой работе особый талант. Уровень 1: Получи Ремонт и Медицину как бонусные навыки. Ты начинаешь игру с набором кибердока и можешь вживлять кибернетику даже с навыком Медицина уровня-0. Ты получаешь бонус +2 ко всем проверкам навыка при операциях по вживлению кибера. Если ты проводишь кому-то обслуживание кибера, тонкость твоих настроек снижает суммарную стоимость Системной нагрузки его имплантов на один пункт до следующего обслуживания. Уровень 2: Качество твоего кибер-обслуживания растёт: снижение Системной нагрузки теперь равно двум пунктам, а не одному. Ты никогда не ошибаешься при установке кибернетики. Один раз на каждого пациента ты можешь изготовить и установить кибер-модификацию системы, как описано в разделе 2.8.2, без затрат денег и экспериментальных компонентов — при условии, что у тебя есть нужные уровни навыков, чтобы её сделать.",
+      "positive": true
+    },
+    {
+      "id": "C11",
+      "language": "ru",
+      "source": "2.4.1",
+      "text": "Сторона",
+      "target": null,
+      "record_name": null,
+      "old_def": "У корпоративных систем почти всегда есть какая-то активная защита. Без бдительного Демона-двух в системе, который поднимет охрану, обитатели объекта могут вообще не узнать, что их сеть атакуют. Точно так же к более важным сетям часто подключены хакеры-сторожа из плоти и крови, поддерживающие в сети живое присутствие 24/7.",
+      "positive": false
+    },
+    {
+      "id": "C12",
+      "language": "ru",
+      "source": "3.3.1",
+      "text": "Скрытую",
+      "target": null,
+      "record_name": null,
+      "old_def": "Делает выбранный дружественный аватар или Демона «невидимым», пока тот не совершит в киберпространстве какое-либо действие, кроме Смены узла. Наблюдатели в узле получают автоматическую встречную проверку Инт/Программирование, чтобы заметить присутствие скрытого аватара, и это завершает программу.",
+      "positive": false
+    },
+    {
+      "id": "C13",
+      "language": "ru",
+      "source": "6.1.3.1",
+      "text": "Маг",
+      "target": null,
+      "record_name": null,
+      "old_def": "Операторы любят самые разные орудия разрушения. Ниже перечислены лишь некоторые из самых распространённых.",
+      "positive": false
+    },
+    {
+      "id": "C14",
+      "language": "ru",
+      "source": "1.6.1",
+      "text": "ПЗ",
+      "target": "1.7.1",
+      "record_name": "ПЗ",
+      "old_def": "Теперь игрок записывает итоговые характеристики персонажа и выбирает его имя и текущую цель.",
+      "positive": true
+    },
+    {
+      "id": "C15",
+      "language": "en",
+      "source": "1.6.1",
+      "text": "HP",
+      "target": "1.7.1",
+      "record_name": "HP",
+      "old_def": "The player now records their character's final statistics and chooses their name and current goal.",
+      "positive": true
+    },
+    {
+      "id": "C16",
+      "language": "ru",
+      "source": "1.6.1",
+      "text": "Системной нагрузки",
+      "target": "2.5.2",
+      "record_name": "Системная нагрузка",
+      "old_def": "Травмы почти неизбежны в карьере оператора. Последствия некоторых из них остаются надолго.",
+      "positive": true
+    },
+    {
+      "id": "C17",
+      "language": "en",
+      "source": "1.6.1",
+      "text": "System Strain",
+      "target": "2.5.2",
+      "record_name": "System Strain",
+      "old_def": "Injury is almost inevitable in an operator's career. Some forms of it can be longer-lasting than others.",
+      "positive": true
+    },
+    {
+      "id": "C18",
+      "language": "ru",
+      "source": "2.4.6.3",
+      "text": "Серьёзная травма",
+      "target": "2.5.6",
+      "record_name": "Серьёзная травма",
+      "old_def": "Травмы почти неизбежны в карьере оператора. Последствия некоторых из них остаются надолго.",
+      "positive": true
+    },
+    {
+      "id": "C19",
+      "language": "en",
+      "source": "2.4.6.3",
+      "text": "Major Injury",
+      "target": "2.5.6",
+      "record_name": "Major Injury",
+      "old_def": "Injury is almost inevitable in an operator's career. Some forms of it can be longer-lasting than others.",
+      "positive": true
+    },
+    {
+      "id": "C20",
+      "language": "ru",
+      "source": "3.6.1",
+      "text": "Доступ",
+      "target": "4.1.3",
+      "record_name": "Доступ",
+      "old_def": "Киберпространство — цифровой мир, доступный через VR и оформленный в стиле, который выбрал владелец системы. Кибердека может преобразовать это оформление в более приятное для пользователя окружение, но большинство хакеров при взломе предпочитают видеть всё «нативно» — так меньше нагрузка на вычисления. Киберпространство состоит из узлов, каждый из которых отражает конкретное сетевое устройство или их кластер. Отдельная камера может быть своим узлом, или набор заводских машин, или подключённое к сети минное поле, или любое другое сетевое «место». В узлах хранятся программы и файлы данных, там же хакер встречает Демонов-охранников и живых сторожей.",
+      "positive": true
+    },
+    {
+      "id": "C21",
+      "language": "en",
+      "source": "3.6.1",
+      "text": "Access",
+      "target": "4.1.3",
+      "record_name": "Access",
+      "old_def": "Cyberspace exits as a VR-mediated digital world that appears in whatever idiom the system's owner has selected. While a cyberdeck can reinterpret these idioms into a sensory experience more palatable to the user, most hackers prefer to see things \"natively\" when hacking a system due to the lower processing requirements. Cyberspace exists in nodes, each one mirroring a particular network device or cluster of devices. A single camera might be its own node, or a set of factory machines, or a net-monitored minefield, or any other network “place”. Nodes are where programs and datafiles are kept and where hackers encounter guardian Demons and human watchdogs.",
+      "positive": true
+    }
+  ]
+}
